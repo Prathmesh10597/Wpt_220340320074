@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wpt Exam</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script>
+      $(() => {
+        $("#bookid").blur(() => {
+          let y = $("#bookid").val();
+
+          let ajaxparam = {
+            data: { x: y },
+            url: "http://localhost:8081/getbookdetails",
+            type: "get",
+            datatype: "json",
+            success: (output) => {
+              if (output.status == true) {
+                $("#msg").text("bookid is found");
+                $("#bookname").val(output.bookdetails.bookname);
+                $("#price").val(output.bookdetails.price);
+              } else {
+                $("#msg").text("bookid is not found");
+                $("#bookname").val(" ");
+                $("#price").val(" ");
+              }
+            },
+            eoor: (error) => {
+              console.log("error" + error);
+            },
+          };
+          $.ajax(ajaxparam);
+        });
+
+        $("#btn").click(() => {
+          let input = {
+            x: $("#bookid").val(),
+            z: $("#price").val(),
+          };
+
+          let ajaxparam = {
+            data: input,
+            url: "http://localhost:8081/updatebookdetails",
+            type: "get",
+            datatype: "json",
+            success: (output) => {
+              if (output.status === true) {
+                $("#msg").text("bookdetails updated");
+              } else {
+                $("#msg").text("bookdetails not updated");
+                $("#bookname").val(" ");
+                $("#price").val(" ");
+              }
+            },
+            error: (error) => {
+              console.log("error  occure" + toString(error));
+            },
+          };
+          $.ajax(ajaxparam);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <input type="text" id="bookid" placeholder="Enter bookid" />
+    <span id="msg">Display message</span>
+    <br />
+    <br />
+    <input type="text" id="bookname" placeholder="Bookname" />
+    <br /><br />
+    <input type="text" id="price" placeholder="Book price" />
+    <br />
+    <button id="btn">Update book</button>
+  </body>
+</html>
